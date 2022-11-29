@@ -7,13 +7,13 @@ export class Brick {
     constructor(
         private brickWidth: number,
         private brickHeight: number,
-        private positon: Vector,
+        private position: Vector,
         private brickEnergy: number,
         image: string
     ){
         this.brickWidth = brickWidth;
         this.brickHeight = brickHeight;
-        this.positon = positon,
+        this.position = position,
         this.brickEnergy = brickEnergy,
         this.brickImage.src = image
     }
@@ -26,7 +26,7 @@ export class Brick {
     get height(): number { 
         return this.brickHeight;
     }
-    get position(): Vector { 
+    get pos(): Vector { 
         return this.position
     }
     get image(): HTMLImageElement { 
