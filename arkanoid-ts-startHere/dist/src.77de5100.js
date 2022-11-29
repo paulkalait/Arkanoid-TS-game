@@ -117,11 +117,164 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"index.ts":[function(require,module,exports) {
-"use strict"; // Start here
+})({"sprites/Brick.ts":[function(require,module,exports) {
+"use strict";
 
-console.log("Start here!");
-},{}],"../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Brick = void 0;
+
+var Brick =
+/** @class */
+function () {
+  function Brick(brickWidth, brickHeight, positon, brickEnergy, image) {
+    this.brickWidth = brickWidth;
+    this.brickHeight = brickHeight;
+    this.positon = positon;
+    this.brickEnergy = brickEnergy;
+    this.brickImage = new Image();
+    this.brickWidth = brickWidth;
+    this.brickHeight = brickHeight;
+    this.positon = positon, this.brickEnergy = brickEnergy, this.brickImage.src = image;
+  }
+
+  Object.defineProperty(Brick.prototype, "width", {
+    //getters
+    get: function get() {
+      return this.brickWidth;
+    },
+    enumerable: false,
+    configurable: true
+  });
+  Object.defineProperty(Brick.prototype, "height", {
+    get: function get() {
+      return this.brickHeight;
+    },
+    enumerable: false,
+    configurable: true
+  });
+  Object.defineProperty(Brick.prototype, "position", {
+    get: function get() {
+      return this.position;
+    },
+    enumerable: false,
+    configurable: true
+  });
+  Object.defineProperty(Brick.prototype, "image", {
+    get: function get() {
+      return this.brickImage;
+    },
+    enumerable: false,
+    configurable: true
+  });
+  Object.defineProperty(Brick.prototype, "energy", {
+    get: function get() {
+      return this.brickEnergy;
+    },
+    //setters 
+    set: function set(energy) {
+      this.brickEnergy = energy;
+    },
+    enumerable: false,
+    configurable: true
+  });
+  return Brick;
+}();
+
+exports.Brick = Brick;
+},{}],"views/CanvasView.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.CanvasView = void 0;
+
+var _Brick = require("~/sprites/Brick");
+
+var CanvasView =
+/** @class */
+function () {
+  function CanvasView(canvasName) {
+    this.canvas = document.querySelector(canvasName);
+    this.context = this.canvas.getContext('2d');
+    this.scoreDisplay = document.querySelector("#score");
+    this.start = document.querySelector("#start");
+    this.info = document.querySelector("#info");
+  } // clear method
+
+
+  CanvasView.prototype.clear = function () {
+    var _a;
+
+    (_a = this.context) === null || _a === void 0 ? void 0 : _a.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  };
+
+  CanvasView.prototype.initStartButton = function (startFunction) {
+    var _this = this;
+
+    var _a;
+
+    (_a = this.start) === null || _a === void 0 ? void 0 : _a.addEventListener("click", function () {
+      // "this" refers to the whole class itself ... "CanvasView"
+      startFunction(_this);
+    });
+  };
+
+  CanvasView.prototype.drawScore = function (score) {
+    if (this.scoreDisplay) this.scoreDisplay.innerHTML = score.toString();
+  };
+
+  CanvasView.prototype.getInfo = function (text) {
+    if (this.info) this.info.innerHTML = text;
+  };
+
+  CanvasView.prototype.drawSprite = function (brick) {
+    var _a;
+
+    if (!_Brick.Brick) return;
+    (_a = this.context) === null || _a === void 0 ? void 0 : _a.drawImage(brick.image, brick.pos.x, brick.pos.y, brick.width, brick.height);
+  };
+
+  CanvasView.prototype.drawBricks = function (bricks) {
+    var _this = this;
+
+    bricks.forEach(function (brick) {
+      _this.drawSprite(brick);
+    });
+  };
+
+  return CanvasView;
+}();
+
+exports.CanvasView = CanvasView;
+},{"~/sprites/Brick":"sprites/Brick.ts"}],"index.ts":[function(require,module,exports) {
+"use strict";
+
+var _CanvasView = require("./views/CanvasView");
+
+var gameOver = false;
+var score = 0;
+
+function setGameOver(view) {
+  view.getInfo("Game Over!");
+  gameOver = false;
+}
+
+function setGameWin(view) {
+  view.getInfo("Game Won");
+  gameOver = false;
+}
+
+function gameLoop(view, bricks, paddle, ball) {}
+
+function startGame(view) {} //create a new view
+
+
+var view = new _CanvasView.CanvasView("#playField");
+view.initStartButton(startGame);
+},{"./views/CanvasView":"views/CanvasView.ts"}],"../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -149,7 +302,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50831" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52292" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
