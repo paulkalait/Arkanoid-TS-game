@@ -4,6 +4,7 @@ import { Brick } from "./sprites/Brick";
 import { Paddle } from "./sprites/Paddle";
 import PADDLE_IMAGE from './images/paddle.png'
 import BALL_IMAGE from './images/ball.png'
+import { Collision } from "./Classes/Collision";
 
 //Level and colors
 import { 
@@ -13,7 +14,8 @@ import {
     PADDLE_STARTX,
     BALL_SIZE,
     BALL_STARTX,
-    BALL_STARTY
+    BALL_STARTY,
+    BALL_SPEED
 } from './setup';
 import {createBricks} from "./helpers"
 
@@ -34,12 +36,16 @@ function gameLoop(
     view: CanvasView, 
     bricks: Brick[],
     paddle: Paddle,
-    // ball: Ball,
+    ball: Ball,
+    collision: Collision
 ) {
 console.log("Action");
 view.clear();
 view.drawBricks(bricks)
 view.drawSprite(paddle)
+view.drawSprite(ball)
+
+ball.moveBall()
 
 //Move paddle and check so it wont exit the playfield
 if((paddle._moveLeft && paddle.pos.x > 0) || 
@@ -47,8 +53,25 @@ if((paddle._moveLeft && paddle.pos.x > 0) ||
 ){ 
     paddle.movePaddle();
 }
+collision.checkBallCollision(ball, paddle, view)
+const collidingWithBrick = collision.isCollidingBricks(ball, bricks)
 
-requestAnimationFrame(() => gameLoop(view, bricks, paddle));
+if(collidingWithBrick){
+    score +=1
+    view.drawScore(score)
+}
+
+//Game over when ball leaves playfield
+if(ball.pos.y > view.canvas.height) gameOver = true;
+//if player won... set game over and display win
+if(bricks.length === 0)  { 
+return setGameWin(view)
+}
+if(gameOver) setGameOver(view)
+
+
+
+requestAnimationFrame(() => gameLoop(view, bricks, paddle, ball, collision));
 }
 
 function startGame(view: CanvasView){
@@ -56,6 +79,9 @@ function startGame(view: CanvasView){
     score = 0;
     view.getInfo('');
     view.drawScore(0);
+    //create a collision instance
+    const collision = new Collision();
+
     // create all bricks
     const bricks = createBricks();
 
@@ -71,8 +97,17 @@ function startGame(view: CanvasView){
         PADDLE_IMAGE
     )
 
+    const ball = new Ball(
+        BALL_SIZE, 
+        { 
+            x: BALL_STARTX,
+            y: BALL_STARTY
+        },
+        BALL_SPEED,
+        BALL_IMAGE
+    )
 
-    gameLoop(view, bricks, paddle)
+    gameLoop(view, bricks, paddle, ball, collision)
 }
 
     //create a new view
